@@ -197,11 +197,8 @@ class Connector(object):
         self.session.mount('http://', adapter)
         self.session.mount('https://', adapter)
         if hasattr(self, 'username') and hasattr(self, 'password'):
-            LOG.info("Authenticating with username and password.")
-            print("Authenticating with username and password.",self.password)
             auth_str = f"{self.username}:{self.password}"
             encoded_auth = base64.b64encode(auth_str.encode('utf-8')).decode('utf-8')
-            print("encoded", encoded_auth)
             self.session.headers.update({'Authorization': f'Basic {encoded_auth}'})
         else:
             self.session.cert = (self.cert, self.key)
