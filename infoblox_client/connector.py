@@ -20,6 +20,7 @@ import requests
 import six
 import urllib3
 import time
+import base64
 from requests import exceptions as req_exc
 
 try:
@@ -197,7 +198,11 @@ class Connector(object):
         self.session.mount('https://', adapter)
         if hasattr(self, 'username') and hasattr(self, 'password'):
             LOG.info("Authenticating with username and password.")
-            self.session.auth = (self.username, self.password)
+            print("Authenticating with username and password.",self.password)
+            auth_str = f"{self.username}:{self.password}"
+            encoded_auth = base64.b64encode(auth_str.encode('utf-8')).decode('utf-8')
+            print("encoded", encoded_auth)
+            self.session.headers.update({'Authorization': f'Basic {encoded_auth}'})
         else:
             self.session.cert = (self.cert, self.key)
             LOG.info("Authenticating with client certificate.")
